@@ -1,0 +1,3 @@
+[submodule "libs/Sol"]
+	path = libs/Sol
+	url = https://github.com/martinjlowm/Sol.git

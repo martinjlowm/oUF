@@ -8,7 +8,6 @@
 ## Notes: Unit frame framework. Does nothing by itself.
 ## Notes-ruRU: Каркас для модификации фреймов игроков. Сам по себе не делает ничего.
 
-## Dependencies: gxLuaPlus
-
+libs\Sol\Sol.xml
 oUF.xml
 elements\elements.xml
