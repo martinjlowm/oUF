@@ -17,7 +17,7 @@
    local MasterLooter = self:CreateTexture(nil, 'OVERLAY')
    MasterLooter:SetSize(16, 16)
    MasterLooter:SetPoint('TOPRIGHT', self)
-   
+
    -- Register it with oUF
    self.MasterLooter = MasterLooter
 
@@ -29,8 +29,8 @@
 
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event)
 	local unit = self.unit
@@ -71,7 +71,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.MasterLooter.Override or Update) (self, ...)
+	return (self.MasterLooter.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

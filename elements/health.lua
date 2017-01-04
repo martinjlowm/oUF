@@ -56,12 +56,12 @@
    Health:SetPoint('TOP')
    Health:SetPoint('LEFT')
    Health:SetPoint('RIGHT')
-   
+
    -- Add a background
    local Background = Health:CreateTexture(nil, 'BACKGROUND')
    Background:SetAllPoints(Health)
    Background:SetTexture(1, 1, 1, .5)
-   
+
    -- Options
    Health.frequentUpdates = true
    Health.colorTapping = true
@@ -69,10 +69,10 @@
    Health.colorClass = true
    Health.colorReaction = true
    Health.colorHealth = true
-   
+
    -- Make the background darker.
    Background.multiplier = .5
-   
+
    -- Register it with oUF
    self.Health = Health
    self.Health.bg = Background
@@ -83,8 +83,8 @@
                   Removing the table key entry will make the element fall-back
                   to its internal function again.
 ]]
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 oUF.colors.health = {49/255, 207/255, 37/255}
 
@@ -143,7 +143,8 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-	return (self.Health.Override or Update) (self, ...)
+    table.insert(arg, arg1)
+    return (self.Health.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)
@@ -156,14 +157,14 @@ local Enable = function(self, unit)
 		health.__owner = self
 		health.ForceUpdate = ForceUpdate
 
-		if(health.frequentUpdates) then
-			self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
-		else
+		-- if(health.frequentUpdates) then
+		-- 	self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
+		-- else
 			self:RegisterEvent('UNIT_HEALTH', Path)
-		end
+		-- end
 
 		self:RegisterEvent("UNIT_MAXHEALTH", Path)
-		self:RegisterEvent('UNIT_CONNECTION', Path)
+		-- self:RegisterEvent('UNIT_CONNECTION', Path)
 
 		-- For tapping.
 		self:RegisterEvent('UNIT_FACTION', Path)

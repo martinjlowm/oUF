@@ -19,7 +19,7 @@
    local RaidIcon = self:CreateTexture(nil, 'OVERLAY')
    RaidIcon:SetSize(16, 16)
    RaidIcon:SetPoint('TOPRIGHT', self)
-   
+
    -- Register it with oUF
    self.RaidIcon = RaidIcon
 
@@ -30,8 +30,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local GetRaidTargetIndex = GetRaidTargetIndex
 local SetRaidTargetIconTexture = SetRaidTargetIconTexture
@@ -56,7 +56,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.RaidIcon.Override or Update) (self, ...)
+	return (self.RaidIcon.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

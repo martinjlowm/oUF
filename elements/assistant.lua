@@ -16,7 +16,7 @@
    local Assistant = self:CreateTexture(nil, "OVERLAY")
    Assistant:SetSize(16, 16)
    Assistant:SetPoint('TOP', self)
-   
+
    -- Register it with oUF
    self.Assistant = Assistant
 
@@ -24,8 +24,8 @@
 
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event)
 	local assistant = self.Assistant
@@ -77,7 +77,7 @@ local Path = function(self, ...)
 	 event - The UI event that fired.
 	 ...   - A vararg with the arguments that accompany the event.
 	]]
-	return (self.Assistant.Override or Update) (self, ...)
+	return (self.Assistant.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

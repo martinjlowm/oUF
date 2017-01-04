@@ -38,8 +38,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local function Update(self, event, unit)
 	if(unit ~= self.unit) then return end
@@ -117,7 +117,7 @@ local function Update(self, event, unit)
 end
 
 local function Path(self, ...)
-	return (self.PvP.Override or Update) (self, ...)
+	return (self.PvP.Override or Update) (self, unpack(arg))
 end
 
 local function ForceUpdate(element)

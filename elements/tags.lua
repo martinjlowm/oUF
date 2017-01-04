@@ -2,9 +2,10 @@
 -- Credits: Vika, Cladhaire, Tekkub
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
+local _G = getfenv(0)
 local _PATTERN = '%[..-%]+'
 
 local _ENV = {
@@ -52,9 +53,6 @@ local tagStrings = {
 
 	["level"] = [[function(u)
 		local l = UnitLevel(u)
-		if(UnitIsWildBattlePet(u) or UnitIsBattlePetCompanion(u)) then
-			l = UnitBattlePetLevel(u)
-		end
 
 		if(l > 0) then
 			return l
@@ -183,14 +181,9 @@ local tagStrings = {
 	end]],
 
 	["cpoints"] = [[function(u)
-		local cp
-		if(UnitHasVehicleUI'player') then
-			cp = GetComboPoints('vehicle', 'target')
-		else
-			cp = GetComboPoints('player', 'target')
-		end
+		local cp = GetComboPoints()
 
-		if(cp > 0) then
+		if (cp > 0) then
 			return cp
 		end
 	end]],
@@ -393,7 +386,7 @@ local tagEvents = {
 	["smartlevel"]          = "UNIT_LEVEL PLAYER_LEVEL_UP UNIT_CLASSIFICATION_CHANGED",
 	["threat"]              = "UNIT_THREAT_SITUATION_UPDATE",
 	["threatcolor"]         = "UNIT_THREAT_SITUATION_UPDATE",
-	['cpoints']             = 'UNIT_POWER_FREQUENT PLAYER_TARGET_CHANGED',
+	['cpoints']             = 'PLAYER_COMBO_POINTS PLAYER_TARGET_CHANGED',
 	['affix']				= 'UNIT_CLASSIFICATION_CHANGED',
 	['plus']				= 'UNIT_CLASSIFICATION_CHANGED',
 	['rare']                = 'UNIT_CLASSIFICATION_CHANGED',
@@ -419,6 +412,7 @@ local unitlessEvents = {
 	PLAYER_LEVEL_UP = true,
 	PLAYER_UPDATE_RESTING = true,
 	PLAYER_TARGET_CHANGED = true,
+        PLAYER_COMBO_POINTS = true,
 
 	PARTY_LEADER_CHANGED = true,
 
@@ -427,15 +421,17 @@ local unitlessEvents = {
 
 local events = {}
 local frame = CreateFrame"Frame"
-frame:SetScript('OnEvent', function(self, event, unit)
-	local strings = events[event]
-	if(strings) then
-		for k, fontstring in next, strings do
-			if(fontstring:IsVisible() and (unitlessEvents[event] or fontstring.parent.unit == unit)) then
+frame:SetScript('OnEvent', function(self)
+                    local unit = arg1
+
+                    local strings = events[event]
+                    if(strings) then
+                        for k, fontstring in next, strings do
+                            if(fontstring:IsVisible() and (unitlessEvents[event] or fontstring.parent.unit == unit)) then
 				fontstring:UpdateTag()
-			end
-		end
-	end
+                            end
+                        end
+                    end
 end)
 
 local OnUpdates = {}
@@ -449,7 +445,7 @@ local createOnUpdate = function(timer)
 		local frame = CreateFrame'Frame'
 		local strings = eventlessUnits[timer]
 
-		frame:SetScript('OnUpdate', function(self, elapsed)
+		frame:SetScript('OnUpdate', function(self)
 			if(total >= timer) then
 				for k, fs in next, strings do
 					if(fs.parent:IsShown() and UnitExists(fs.parent.unit)) then
@@ -460,7 +456,7 @@ local createOnUpdate = function(timer)
 				total = 0
 			end
 
-			total = total + elapsed
+			total = total + arg1
 		end)
 
 		OnUpdates[timer] = frame
@@ -474,37 +470,37 @@ local OnShow = function(self)
 end
 
 local getTagName = function(tag)
-	local s = (tag:match('>+()') or 2)
-	local e = tag:match('.*()<+')
+	local s = string.match(tag, '>+()') or 2
+	local e = string.match(tag, '.*()<+')
 	e = (e and e - 1) or -2
 
-	return tag:sub(s, e), s, e
+	return string.sub(tag, s, e), s, e
 end
 
 local RegisterEvent = function(fontstr, event)
-	if(not events[event]) then events[event] = {} end
+    if(not events[event]) then events[event] = {} end
 
-	frame:RegisterEvent(event)
-	table.insert(events[event], fontstr)
+    frame:RegisterEvent(event)
+    table.insert(events[event], fontstr)
 end
 
 local RegisterEvents = function(fontstr, tagstr)
-	for tag in tagstr:gmatch(_PATTERN) do
-		tag = getTagName(tag)
-		local tagevents = tagEvents[tag]
-		if(tagevents) then
-			for event in tagevents:gmatch'%S+' do
-				RegisterEvent(fontstr, event)
-			end
-		end
-	end
+    for tag in string.gmatch(tagstr, _PATTERN) do
+        tag = getTagName(tag)
+        local tagevents = tagEvents[tag]
+        if (tagevents) then
+            for event in string.gmatch(tagevents, '%S+') do
+                RegisterEvent(fontstr, event)
+            end
+        end
+    end
 end
 
 local UnregisterEvents = function(fontstr)
 	for event, data in pairs(events) do
 		for k, tagfsstr in pairs(data) do
 			if(tagfsstr == fontstr) then
-				if(#data == 1) then
+                            if(select('#', data) == 1) then
 					frame:UnregisterEvent(event)
 				end
 
@@ -540,22 +536,22 @@ local Tag = function(self, fs, tagstr)
 
 	local func = tagPool[tagstr]
 	if(not func) then
-		local format, numTags = tagstr:gsub('%%', '%%%%'):gsub(_PATTERN, '%%s')
+            local format, numTags = string.gsub(string.gsub(tagstr, '%%', '%%%%'), _PATTERN, '%%s')
 		local args = {}
 
-		for bracket in tagstr:gmatch(_PATTERN) do
-			local tagFunc = funcPool[bracket] or tags[bracket:sub(2, -2)]
+		for bracket in string.gmatch(tagstr, _PATTERN) do
+                    local tagFunc = funcPool[bracket] or tags[string.sub(bracket, 2, -2)]
+
 			if(not tagFunc) then
 				local tagName, s, e = getTagName(bracket)
-
 				local tag = tags[tagName]
 				if(tag) then
 					s = s - 2
 					e = e + 2
 
 					if(s ~= 0 and e ~= 0) then
-						local pre = bracket:sub(2, s)
-						local ap = bracket:sub(e, -2)
+						local pre = string.sub(bracket, 2, s)
+						local ap = string.sub(bracket, e, -2)
 
 						tagFunc = function(u,r)
 							local str = tag(u,r)
@@ -564,7 +560,7 @@ local Tag = function(self, fs, tagstr)
 							end
 						end
 					elseif(s ~= 0) then
-						local pre = bracket:sub(2, s)
+						local pre = string.sub(bracket, 2, s)
 
 						tagFunc = function(u,r)
 							local str = tag(u,r)
@@ -573,7 +569,7 @@ local Tag = function(self, fs, tagstr)
 							end
 						end
 					elseif(e ~= 0) then
-						local ap = bracket:sub(e, -2)
+						local ap = string.sub(bracket, e, -2)
 
 						tagFunc = function(u,r)
 							local str = tag(u,r)
@@ -590,7 +586,7 @@ local Tag = function(self, fs, tagstr)
 			if(tagFunc) then
 				table.insert(args, tagFunc)
 			else
-				return error(('Attempted to use invalid tag %s.'):format(bracket), 3)
+				return error(string.format('Attempted to use invalid tag %s.', bracket), 3)
 			end
 		end
 
@@ -603,10 +599,10 @@ local Tag = function(self, fs, tagstr)
 				end
 
 				_ENV._COLORS = parent.colors
-				return self:SetFormattedText(
-					format,
-					args[1](parent.unit, realUnit) or ''
-				)
+				return self:SetText(
+                                    string.format(format,
+                                                  args[1](parent.unit, realUnit) or '')
+                                )
 			end
 		elseif(numTags == 2) then
 			func = function(self)
@@ -618,10 +614,10 @@ local Tag = function(self, fs, tagstr)
 				end
 
 				_ENV._COLORS = parent.colors
-				return self:SetFormattedText(
-					format,
-					args[1](unit, realUnit) or '',
-					args[2](unit, realUnit) or ''
+				return self:SetText(
+                                    string.format(format,
+                                                  args[1](unit, realUnit) or '',
+                                                  args[2](unit, realUnit) or '')
 				)
 			end
 		elseif(numTags == 3) then
@@ -634,11 +630,11 @@ local Tag = function(self, fs, tagstr)
 				end
 
 				_ENV._COLORS = parent.colors
-				return self:SetFormattedText(
-					format,
-					args[1](unit, realUnit) or '',
-					args[2](unit, realUnit) or '',
-					args[3](unit, realUnit) or ''
+				return self:SetText(
+                                    string.format(format,
+                                                  args[1](unit, realUnit) or '',
+                                                  args[2](unit, realUnit) or '',
+                                                  args[3](unit, realUnit) or '')
 				)
 			end
 		else
@@ -656,7 +652,10 @@ local Tag = function(self, fs, tagstr)
 				end
 
 				-- We do 1, numTags because tmp can hold several unneeded variables.
-				return self:SetFormattedText(format, unpack(tmp, 1, numTags))
+				return self:SetText(
+                                    string.format(format,
+                                                  unpack(tmp, 1, numTags))
+                                )
 			end
 		end
 

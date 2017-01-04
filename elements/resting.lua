@@ -17,7 +17,7 @@
    local Resting = self:CreateTexture(nil, 'OVERLAY')
    Resting:SetSize(16, 16)
    Resting:SetPoint('TOPLEFT', self)
-   
+
    -- Register it with oUF
    self.Resting = Resting
 
@@ -28,8 +28,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event)
 	local resting = self.Resting
@@ -50,7 +50,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.Resting.Override or Update) (self, ...)
+	return (self.Resting.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

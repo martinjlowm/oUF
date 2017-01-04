@@ -1,5 +1,5 @@
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local hiddenParent = CreateFrame("Frame")
 hiddenParent:Hide()
@@ -56,7 +56,7 @@ function oUF:DisableBlizzard(unit)
 
 		-- User placed frames don't animate
 		PlayerFrame:SetUserPlaced(true)
-		PlayerFrame:SetDontSavePosition(true)
+		-- PlayerFrame:SetDontSavePosition(true)
 	elseif(unit == 'pet') then
 		HandleFrame(PetFrame)
 	elseif(unit == 'target') then

@@ -1,19 +1,24 @@
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 local Private = oUF.Private
 
 local frame_metatable = Private.frame_metatable
 
 local colors = {
-	smooth = {
-		1, 0, 0,
-		1, 1, 0,
-		0, 1, 0
-	},
-	disconnected = {.6, .6, .6},
-	tapped = {.6,.6,.6},
-	class = {},
-	reaction = {},
+    happiness = {
+        [1] = {1, 0, 0}, -- need.... | unhappy
+        [2] = {1, 1, 0}, -- new..... | content
+        [3] = {0, 1, 0}, -- colors.. | happy
+    },
+    smooth = {
+        1, 0, 0,
+        1, 1, 0,
+        0, 1, 0
+    },
+    disconnected = {.6, .6, .6},
+    tapped = {.6,.6,.6},
+    class = {},
+    reaction = {},
 }
 
 -- We do this because people edit the vars directly, and changing the default
@@ -55,26 +60,27 @@ for eclass, color in next, FACTION_BAR_COLORS do
 	colors.reaction[eclass] = {color.r, color.g, color.b}
 end
 
-local function ColorsAndPercent(a, b, ...)
-	if a <= 0 or b == 0 then
-		return nil, ...
-	elseif a >= b then
-		return nil, select(select('#', ...) - 2, ...)
-	end
+local function ColorsAndPercent(a, ...)
+    local b = arg[1]
+    if a <= 0 or b == 0 then
+        return nil, unpack(arg)
+    elseif a >= b then
+        return nil, select(select('#', unpack(arg)) - 2, unpack(arg))
+    end
 
-	local num = select('#', ...) / 3
-	local segment, relperc = math.modf((a/b)*(num-1))
-	return relperc, select((segment*3)+1, ...)
+    local num = select('#', unpack(arg)) / 3
+    local segment, relperc = math.modf((a / b) * (num - 1))
+    return relperc, select((segment * 3) + 1, unpack(arg))
 end
 
 -- http://www.wowwiki.com/ColorGradient
 local RGBColorGradient = function(...)
-	local relperc, r1, g1, b1, r2, g2, b2 = ColorsAndPercent(...)
-	if relperc then
-		return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
-	else
-		return r1, g1, b1
-	end
+    local relperc, r1, g1, b1, r2, g2, b2 = ColorsAndPercent(unpack(arg))
+    if relperc then
+        return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
+    else
+        return r1, g1, b1
+    end
 end
 
 -- HCY functions are based on http://www.chilliant.com/rgb2hsv.html
@@ -88,7 +94,7 @@ local function RGBToHCY(r, g, b)
 	local hue
 	if chroma > 0 then
 		if r == max then
-			hue = ((g - b) / chroma) % 6
+			hue = math.fmod(((g - b) / chroma), 6)
 		elseif g == max then
 			hue = (b - r) / chroma + 2
 		elseif b == max then
@@ -104,7 +110,7 @@ local function HCYtoRGB(hue, chroma, luma)
 	local r, g, b = 0, 0, 0
 	if hue and luma > 0 then
 		local h2 = hue * 6
-		local x = chroma * (1 - abs(h2 % 2 - 1))
+		local x = chroma * (1 - abs(math.fmod(h2, 2) - 1))
 		if h2 < 1 then
 			r, g, b = chroma, x, 0
 		elseif h2 < 2 then
@@ -132,7 +138,7 @@ local function HCYtoRGB(hue, chroma, luma)
 end
 
 local HCYColorGradient = function(...)
-	local relperc, r1, g1, b1, r2, g2, b2 = ColorsAndPercent(...)
+	local relperc, r1, g1, b1, r2, g2, b2 = ColorsAndPercent(unpack(arg))
 	if not relperc then return r1, g1, b1 end
 	local h1, c1, y1 = RGBToHCY(r1, g1, b1)
 	local h2, c2, y2 = RGBToHCY(r2, g2, b2)
@@ -145,7 +151,7 @@ local HCYColorGradient = function(...)
 		elseif dh > 0.5 then
 			dh = dh - 1
 		end
-		return HCYtoRGB((h1 + dh * relperc) % 1, c, y)
+		return HCYtoRGB(math.fmod(h1 + dh * relperc, 1), c, y)
 	else
 		return HCYtoRGB(h1 or h2, c, y)
 	end
@@ -153,7 +159,7 @@ local HCYColorGradient = function(...)
 end
 
 local ColorGradient = function(...)
-	return (oUF.useHCYColorGradient and HCYColorGradient or RGBColorGradient)(...)
+	return (oUF.useHCYColorGradient and HCYColorGradient or RGBColorGradient)(unpack(arg))
 end
 
 Private.colors = colors

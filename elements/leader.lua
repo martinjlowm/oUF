@@ -17,7 +17,7 @@
    local Leader = self:CreateTexture(nil, "OVERLAY")
    Leader:SetSize(16, 16)
    Leader:SetPoint("BOTTOM", self, "TOP")
-   
+
    -- Register it with oUF
    self.Leader = Leadera
 
@@ -28,8 +28,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event)
 	local leader = self.Leader
@@ -38,7 +38,7 @@ local Update = function(self, event)
 	end
 
 	local unit = self.unit
-	local isLeader = (UnitInParty(unit) or UnitInRaid(unit)) and UnitIsGroupLeader(unit)
+	local isLeader = (UnitInParty(unit) and UnitIsPartyLeader(unit)) or (UnitInRaid(unit) and UnitIsRaidLeader(unit))
 	if(isLeader) then
 		leader:Show()
 	else
@@ -51,7 +51,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.Leader.Override or Update) (self, ...)
+	return (self.Leader.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

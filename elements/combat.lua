@@ -16,7 +16,7 @@
    local Combat = self:CreateTexture(nil, "OVERLAY")
    Combat:SetSize(16, 16)
    Combat:SetPoint('TOP', self)
-   
+
    -- Register it with oUF
    self.Combat = Combat
 
@@ -28,8 +28,8 @@
 
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event)
 	local combat = self.Combat
@@ -50,7 +50,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.Combat.Override or Update) (self, ...)
+	return (self.Combat.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

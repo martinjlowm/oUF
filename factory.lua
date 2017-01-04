@@ -1,13 +1,13 @@
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 local Private = oUF.Private
 
 local argcheck = Private.argcheck
 
 local _QUEUE = {}
 local _FACTORY = CreateFrame'Frame'
-_FACTORY:SetScript('OnEvent', function(self, event, ...)
-	return self[event](self, event, ...)
+_FACTORY:SetScript('OnEvent', function(...)
+	return this[event](this, event, unpack(arg))
 end)
 
 _FACTORY:RegisterEvent'PLAYER_LOGIN'
@@ -28,7 +28,7 @@ function oUF:Factory(func)
 	argcheck(func, 2, 'function')
 
 	-- Call the function directly if we're active and logged in.
-	if(IsLoggedIn() and _FACTORY.active) then
+	if(_FACTORY.active) then
 		return func(self)
 	else
 		table.insert(_QUEUE, func)

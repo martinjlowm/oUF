@@ -15,14 +15,14 @@
    local CPoints = {}
    for index = 1, MAX_COMBO_POINTS do
       local CPoint = self:CreateTexture(nil, 'BACKGROUND')
-   
+
       -- Position and size of the combo point.
       CPoint:SetSize(12, 16)
       CPoint:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', index * CPoint:GetWidth(), 0)
-   
+
       CPoints[index] = CPoint
    end
-   
+
    -- Register with oUF
    self.CPoints = CPoints
 
@@ -33,8 +33,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local GetComboPoints = GetComboPoints
 local MAX_COMBO_POINTS = MAX_COMBO_POINTS
@@ -68,7 +68,7 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-	return (self.CPoints.Override or Update) (self, ...)
+	return (self.CPoints.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

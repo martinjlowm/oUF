@@ -48,8 +48,8 @@
 
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local _, PlayerClass = UnitClass'player'
 
@@ -60,7 +60,7 @@ local RequireSpec, RequireSpell
 
 local UpdateTexture = function(element)
 	local color = oUF.colors.power[ClassPowerType or 'COMBO_POINTS']
-	for i = 1, #element do
+	for i = 1, select('#', element) do
 		local icon = element[i]
 		if(icon.SetDesaturated) then
 			icon:SetDesaturated(PlayerClass ~= 'PRIEST')
@@ -141,7 +141,7 @@ local Update = function(self, event, unit, powerType)
 end
 
 local Path = function(self, ...)
-	return (self.ClassIcons.Override or Update) (self, ...)
+	return (self.ClassIcons.Override or Update) (self, unpack(arg))
 end
 
 local function Visibility(self, event, unit)
@@ -173,7 +173,7 @@ local function Visibility(self, event, unit)
 end
 
 local VisibilityPath = function(self, ...)
-	return (self.ClassIcons.OverrideVisibility or Visibility) (self, ...)
+	return (self.ClassIcons.OverrideVisibility or Visibility) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)
@@ -200,7 +200,7 @@ do
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
 
 		local element = self.ClassIcons
-		for i = 1, #element do
+		for i = 1, select('#', element) do
 			element[i]:Hide()
 		end
 
@@ -240,7 +240,7 @@ local Enable = function(self, unit)
 	if(not element) then return end
 
 	element.__owner = self
-	element.__max = #element
+	element.__max = select('#', element)
 	element.ForceUpdate = ForceUpdate
 
 	if(RequireSpec or RequireSpell) then
@@ -251,7 +251,7 @@ local Enable = function(self, unit)
 	element.ClassPowerDisable = ClassPowerDisable
 
 	local isChildrenTextures
-	for i = 1, #element do
+	for i = 1, select('#', element) do
 		local icon = element[i]
 		if(icon:IsObjectType'Texture') then
 			if(not icon:GetTexture()) then

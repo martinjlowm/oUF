@@ -19,7 +19,7 @@
    local Threat = self:CreateTexture(nil, 'OVERLAY')
    Threat:SetSize(16, 16)
    Threat:SetPoint('TOPRIGHT', self)
-   
+
    -- Register it with oUF
    self.Threat = Threat
 
@@ -30,8 +30,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event, unit)
 	if(unit ~= self.unit) then return end
@@ -57,7 +57,7 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-	return (self.Threat.Override or Update) (self, ...)
+	return (self.Threat.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

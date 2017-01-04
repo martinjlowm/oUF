@@ -1,4 +1,4 @@
-local parent, ns = ...
+local parent = 'oUF'
 
 -- It's named Private for a reason!
-ns.oUF.Private = nil
+oUF.Private = nil

@@ -99,11 +99,11 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 oUF.colors.power = {}
-for power, color in next, PowerBarColor do
+for power, color in next, ManaBarColor do
 	if (type(power) == "string") then
 		if(type(select(2, next(color))) == 'table') then
 			oUF.colors.power[power] = {}
@@ -238,7 +238,8 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-	return (self.Power.Override or Update) (self, ...)
+    table.insert(arg, arg1)
+	return (self.Power.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)
@@ -251,20 +252,24 @@ local Enable = function(self, unit)
 		power.__owner = self
 		power.ForceUpdate = ForceUpdate
 
-		if(power.frequentUpdates and (unit == 'player' or unit == 'pet')) then
-			self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
-		else
-			self:RegisterEvent('UNIT_POWER', Path)
-		end
+		-- if(power.frequentUpdates and (unit == 'player' or unit == 'pet')) then
+		-- 	self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
+		-- else
+                    self:RegisterEvent('UNIT_MANA', Path)
+                    self:RegisterEvent('UNIT_RAGE', Path)
+                    self:RegisterEvent('UNIT_ENERGY', Path)
+		-- end
 
-		self:RegisterEvent('UNIT_POWER_BAR_SHOW', Path)
-		self:RegisterEvent('UNIT_POWER_BAR_HIDE', Path)
-		self:RegisterEvent('UNIT_DISPLAYPOWER', Path)
-		self:RegisterEvent('UNIT_CONNECTION', Path)
-		self:RegisterEvent('UNIT_MAXPOWER', Path)
+		-- self:RegisterEvent('UNIT_POWER_BAR_SHOW', Path)
+		-- self:RegisterEvent('UNIT_POWER_BAR_HIDE', Path)
+		-- self:RegisterEvent('UNIT_DISPLAYPOWER', Path)
+		-- self:RegisterEvent('UNIT_CONNECTION', Path)
+                self:RegisterEvent('UNIT_MAXMANA', Path)
+                self:RegisterEvent('UNIT_MAXRAGE', Path)
+                self:RegisterEvent('UNIT_MAXENERGY', Path)
 
 		-- For tapping.
-		self:RegisterEvent('UNIT_FACTION', Path)
+		-- self:RegisterEvent('UNIT_FACTION', Path)
 
 		if(power:IsObjectType'StatusBar') then
 			power.texture = power:GetStatusBarTexture() and power:GetStatusBarTexture():GetTexture() or [[Interface\TargetingFrame\UI-StatusBar]]
@@ -278,14 +283,18 @@ end
 local Disable = function(self)
 	local power = self.Power
 	if(power) then
-		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
-		self:UnregisterEvent('UNIT_POWER', Path)
-		self:UnregisterEvent('UNIT_POWER_BAR_SHOW', Path)
-		self:UnregisterEvent('UNIT_POWER_BAR_HIDE', Path)
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
-		self:UnregisterEvent('UNIT_CONNECTION', Path)
-		self:UnregisterEvent('UNIT_MAXPOWER', Path)
-		self:UnregisterEvent('UNIT_FACTION', Path)
+		-- self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:UnregisterEvent('UNIT_MANA', Path)
+		self:UnregisterEvent('UNIT_MAXMANA', Path)
+                self:UnregisterEvent('UNIT_RAGE', Path)
+                self:UnregisterEvent('UNIT_MAXRAGE', Path)
+                self:UnregisterEvent('UNIT_ENERGY', Path)
+		self:UnregisterEvent('UNIT_MAXENERGY', Path)
+		-- self:UnregisterEvent('UNIT_POWER_BAR_SHOW', Path)
+		-- self:UnregisterEvent('UNIT_POWER_BAR_HIDE', Path)
+		-- self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
+		-- self:UnregisterEvent('UNIT_CONNECTION', Path)
+		-- self:UnregisterEvent('UNIT_FACTION', Path)
 	end
 end
 

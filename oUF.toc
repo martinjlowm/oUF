@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 11200
 ## Title: oUF
 ## Author: Haste
 ## Version: 1.6.9
@@ -8,4 +8,7 @@
 ## Notes: Unit frame framework. Does nothing by itself.
 ## Notes-ruRU: Каркас для модификации фреймов игроков. Сам по себе не делает ничего.
 
+## Dependencies: gxLuaPlus
+
 oUF.xml
+elements\elements.xml

@@ -18,7 +18,7 @@
    local Portrait = CreateFrame('PlayerModel', nil, self)
    Portrait:SetSize(32, 32)
    Portrait:SetPoint('RIGHT', self, 'LEFT')
-   
+
    -- Register it with oUF
    self.Portrait = Portrait
 
@@ -26,7 +26,7 @@
    local Portrait = self:CreateTexture(nil, 'OVERLAY')
    Portrait:SetSize(32, 32)
    Portrait:SetPoint('RIGHT', self, 'LEFT')
-   
+
    -- Register it with oUF
    self.Portrait = Portrait
 
@@ -37,8 +37,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local Update = function(self, event, unit)
 	if(not unit or not UnitIsUnit(self.unit, unit)) then return end
@@ -73,7 +73,7 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-	return (self.Portrait.Override or Update) (self, ...)
+	return (self.Portrait.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)

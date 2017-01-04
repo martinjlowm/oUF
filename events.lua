@@ -1,5 +1,5 @@
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 local Private = oUF.Private
 
 local argcheck = Private.argcheck
@@ -8,9 +8,9 @@ local frame_metatable = Private.frame_metatable
 
 -- Original event methods
 local RegisterEvent = frame_metatable.__index.RegisterEvent
-local RegisterUnitEvent = frame_metatable.__index.RegisterUnitEvent
+-- local RegisterUnitEvent = frame_metatable.__index.RegisterUnitEvent
 local UnregisterEvent = frame_metatable.__index.UnregisterEvent
-local IsEventRegistered = frame_metatable.__index.IsEventRegistered
+-- local IsEventRegistered = frame_metatable.__index.IsEventRegistered
 
 local unitEvents = {}
 
@@ -22,30 +22,40 @@ Private.UpdateUnits = function(frame, unit, realUnit)
 		for event in next, unitEvents do
 			-- IsEventRegistered returns the units in case of an event
 			-- registered with RegisterUnitEvent
-			local registered, unit1 = IsEventRegistered(frame, event)
-			if registered and unit1 ~= unit then
-				-- RegisterUnitEvent erases previously registered units so
-				-- do not bother to unregister it
-				RegisterUnitEvent(frame, event, unit, realUnit)
-			end
+			-- local registered, unit1 = IsEventRegistered(frame, event)
+			-- if registered and unit1 ~= unit then
+			-- 	-- RegisterUnitEvent erases previously registered units so
+			-- 	-- do not bother to unregister it
+			-- 	RegisterUnitEvent(frame, event, unit, realUnit)
+			-- end
 		end
 		frame.unit = unit
 		frame.realUnit = realUnit
-		frame.id = unit:match'^.-(%d+)'
+		frame.id = string.match(unit, '^.-(%d+)')
 		return true
 	end
 end
 
-local OnEvent = function(self, event, ...)
-	if self:IsVisible() then
-		return self[event](self, event, ...)
-	end
+local OnEvent = function(...)
+    table.insert(arg, arg1)
+    table.insert(arg, arg2)
+    table.insert(arg, arg3)
+    table.insert(arg, arg4)
+    table.insert(arg, arg5)
+    table.insert(arg, arg6)
+    table.insert(arg, arg7)
+    table.insert(arg, arg8)
+    table.insert(arg, arg9)
+    table.insert(arg, arg10)
+    table.insert(arg, arg11)
+    table.insert(arg, arg12)
+    return this[event](this, event, unpack(arg))
 end
 
 local event_metatable = {
 	__call = function(funcs, self, ...)
 		for _, func in next, funcs do
-			func(self, ...)
+			func(self, unpack(arg))
 		end
 	end,
 }
@@ -61,7 +71,7 @@ function frame_metatable.__index:RegisterEvent(event, func, unitless)
 	end
 
 	-- TODO: should warn the user.
-	if not unitless and not (unitEvents[event] or event:match'^UNIT_') then
+	if not unitless and not (unitEvents[event] or string.match(event, '^(UNIT_)')) then
 		unitless = true
 	end
 
@@ -77,8 +87,8 @@ function frame_metatable.__index:RegisterEvent(event, func, unitless)
 
 			table.insert(curev, func)
 		end
-	elseif(IsEventRegistered(self, event)) then
-		return
+	-- elseif(IsEventRegistered(self, event)) then
+	-- 	return
 	else
 		if(type(func) == 'function') then
 			self[event] = func
@@ -90,12 +100,12 @@ function frame_metatable.__index:RegisterEvent(event, func, unitless)
 			self:SetScript('OnEvent', OnEvent)
 		end
 
-		if unitless then
+		-- if unitless then
 			RegisterEvent(self, event)
-		else
-			unitEvents[event] = true
-			RegisterUnitEvent(self, event, self.unit)
-		end
+		-- else
+		-- 	unitEvents[event] = true
+		-- 	RegisterUnitEvent(self, event, self.unit)
+		-- end
 	end
 end
 
@@ -108,7 +118,7 @@ function frame_metatable.__index:UnregisterEvent(event, func)
 			if(infunc == func) then
 				table.remove(curev, k)
 
-				local n = #curev
+				local n = select('#', curev)
 				if(n == 1) then
 					local _, handler = next(curev)
 					self[event] = handler

@@ -27,7 +27,7 @@
    local ReadyCheck = self:CreateTexture(nil, 'OVERLAY')
    ReadyCheck:SetSize(16, 16)
    ReadyCheck:SetPoint('TOP')
-   
+
    -- Register with oUF
    self.ReadyCheck = ReadyCheck
 
@@ -38,8 +38,8 @@
                   to its internal function again.
 ]]
 
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
 
 local function OnFinished(self)
 	local element = self:GetParent()
@@ -114,7 +114,7 @@ local Update = function(self, event)
 end
 
 local Path = function(self, ...)
-	return (self.ReadyCheck.Override or Update) (self, ...)
+	return (self.ReadyCheck.Override or Update) (self, unpack(arg))
 end
 
 local ForceUpdate = function(element)
