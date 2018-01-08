@@ -7,6 +7,7 @@
 ## X-oUF: oUF
 ## Notes: Unit frame framework. Does nothing by itself.
 ## Notes-ruRU: Каркас для модификации фреймов игроков. Сам по себе не делает ничего.
+## Dependencies: StateDriver
 
 libs\Sol\Sol.xml
 oUF.xml

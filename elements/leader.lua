@@ -38,7 +38,7 @@ local Update = function(self, event)
 	end
 
 	local unit = self.unit
-	local isLeader = (UnitInParty(unit) and UnitIsPartyLeader(unit)) or (UnitInRaid(unit) and UnitIsRaidLeader(unit))
+	-- local isLeader = (UnitInParty(unit) and UnitIsPartyLeader(unit)) or (UnitInRaid(unit) and UnitIsRaidLeader(unit))
 	if(isLeader) then
 		leader:Show()
 	else
