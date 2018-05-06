@@ -35,11 +35,6 @@ local HandleFrame = function(baseName)
         if(spell) then
             spell:UnregisterAllEvents()
         end
-
-        local altpowerbar = frame.powerBarAlt
-        if(altpowerbar) then
-            altpowerbar:UnregisterAllEvents()
-        end
     end
 end
 

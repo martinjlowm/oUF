@@ -172,4 +172,4 @@ local Disable = function(self)
 	end
 end
 
-oUF:AddElement("Stagger", VisibilityPath, Enable, Disable)
+-- oUF:AddElement("Stagger", VisibilityPath, Enable, Disable)

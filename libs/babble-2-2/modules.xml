@@ -1,0 +1,22 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Script file="Babble-Boss-2.2\Babble-Boss-2.2.lua"/>
+<Script file="Babble-Class-2.2\Babble-Class-2.2.lua"/>
+<Script file="Babble-Zone-2.2\Babble-Zone-2.2.lua"/>
+<Script file="Babble-Spell-2.2\Babble-Spell-2.2.lua"/>
+<Script file="Babble-SpellTree-2.2\Babble-SpellTree-2.2.lua"/>
+<Script file="Babble-Race-2.2\Babble-Race-2.2.lua"/>
+<Script file="Babble-Fish-2.2\Babble-Fish-2.2.lua"/>
+<Script file="Babble-Herbs-2.2\Babble-Herbs-2.2.lua"/>
+<Script file="Babble-Ore-2.2\Babble-Ore-2.2.lua"/>
+<Script file="Babble-Gas-2.2\Babble-Gas-2.2.lua"/>
+<Script file="Babble-Vendor-2.2\Babble-Vendor-2.2.lua"/>
+<Script file="Babble-Quest-2.2\Babble-Quest-2.2.lua"/>
+<Script file="Babble-Trainer-2.2\Babble-Trainer-2.2.lua"/>
+<Script file="Babble-Tradeskill-2.2\Babble-Tradeskill-2.2.lua"/>
+<Script file="Babble-Faction-2.2\Babble-Faction-2.2.lua"/>
+<Script file="Babble-Inventory-2.2\Babble-Inventory-2.2.lua"/>
+<Script file="Babble-Mount-2.2\Babble-Mount-2.2.lua"/>
+
+</Ui>

@@ -1,0 +1,34 @@
+﻿## Interface: 20400
+## LoadOnDemand: 1
+## Title: Lib: Babble-2.2
+## Notes: A library to help with localization.
+## Notes-deDE: BabbleLib ist eine Bibliothek, die bei der Lokalisierung helfen soll.
+## Notes-frFR: Une bibliothèque d'aide à la localisation.
+## Notes-esES: Una biblioteca para ayudar con las localizaciones.
+## Notes-zhCN: 为本地化服务的函数库
+## Author: ckknight
+## X-eMail: ckknight@gmail.com
+## X-Credits: Funkydude(Babble-Boss), others
+## Version: 2.2.$Revision: 1247 $
+## X-Category: Library
+## OptionalDeps: Ace2
+## X-AceLibrary-Babble-Boss-2.2: true
+## X-AceLibrary-Babble-Class-2.2: true
+## X-AceLibrary-Babble-Zone-2.2: true
+## X-AceLibrary-Babble-Spell-2.2: true
+## X-AceLibrary-Babble-SpellTree-2.2: true
+## X-AceLibrary-Babble-Race-2.2: true
+## X-AceLibrary-Babble-Herbs-2.2: true
+## X-AceLibrary-Babble-Fish-2.2: true
+## X-AceLibrary-Babble-Ore-2.2: true
+## X-AceLibrary-Babble-Gas-2.2: true
+## X-AceLibrary-Babble-Vendor-2.2: true
+## X-AceLibrary-Babble-Quest-2.2: true
+## X-AceLibrary-Babble-Trainer-2.2: true
+## X-AceLibrary-Babble-Tradeskill-2.2: true
+## X-AceLibrary-Babble-Faction-2.2: true
+## X-AceLibrary-Babble-Inventory-2.2: true
+## X-AceLibrary-Babble-Mount-2.2: true
+## X-License: MIT
+
+modules.xml

@@ -1,0 +1,17 @@
+﻿## Interface: 20300
+## LoadOnDemand: 1
+## Title: Lib: Babble [|cffeda55fFaction|r]
+## Notes: A library to help with localization.
+## Notes-deDE: BabbleLib ist eine Bibliothek, die bei der Lokalisierung helfen soll.
+## Notes-frFR: Une bibliothèque d'aide à la localisation.
+## Notes-esES: Una biblioteca para ayudar con las localizaciones.
+## Notes-ruRU: Библиотека для локализации аддонов.
+## Author: Daviesh
+## X-eMail: oma_daviesh@hotmail.com
+## Version: 2.2.$Revision: 1288 $
+## X-Category: Library
+## OptionalDeps: Ace2
+## X-AceLibrary-Babble-Faction-2.2: true
+## X-License: MIT
+
+Babble-Faction-2.2.lua

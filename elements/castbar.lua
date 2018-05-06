@@ -1308,7 +1308,7 @@ end
 local SPELLCAST_DELAYED = function(self, event)
     if self.unit ~= 'player' then return end
 
-    local end_time = unit_casting_info['player'][6]
+    local end_time = unit_casting_info['player'][6] or 0
     unit_casting_info['player'][6] = end_time + (arg1 / 1e3)
 
     UNIT_SPELLCAST_DELAYED(self, event, 'player')

@@ -32,7 +32,7 @@
    myBar:SetPoint('BOTTOM')
    myBar:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
    myBar:SetWidth(200)
-   
+
    local otherBar = CreateFrame('StatusBar', nil, self.Health)
    otherBar:SetPoint('TOP')
    otherBar:SetPoint('BOTTOM')
@@ -50,7 +50,7 @@
    healAbsorbBar:SetPoint('BOTTOM')
    healAbsorbBar:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
    healAbsorbBar:SetWidth(200)
-   
+
    -- Register with oUF
    self.HealPrediction = {
       myBar = myBar,
@@ -68,8 +68,15 @@
                   to its internal function again.
 ]]
 
-local _, ns = ...
-local oUF = ns.oUF
+local parent = 'oUF'
+local oUF = oUF
+
+local HealComm = AceLibrary('HealComm-1.0')
+
+UnitGetIncomingHeals = NOOP
+UnitGetTotalAbsorbs = NOOP
+UnitGetTotalHealAbsorbs = NOOP
+
 
 local function Update(self, event, unit)
 	if(self.unit ~= unit) then return end
@@ -77,8 +84,12 @@ local function Update(self, event, unit)
 	local hp = self.HealPrediction
 	if(hp.PreUpdate) then hp:PreUpdate(unit) end
 
-	local myIncomingHeal = UnitGetIncomingHeals(unit, 'player') or 0
-	local allIncomingHeal = UnitGetIncomingHeals(unit) or 0
+        if not HealComm.UnitGetIncomingHeals then
+            return
+        end
+
+        local myIncomingHeal = HealComm:UnitGetIncomingHeals(unit, 'player') or 0
+	local allIncomingHeal = HealComm:UnitGetIncomingHeals(unit) or 0
 	local totalAbsorb = UnitGetTotalAbsorbs(unit) or 0
 	local myCurrentHealAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
@@ -149,7 +160,19 @@ local function Update(self, event, unit)
 end
 
 local function Path(self, ...)
-	return (self.HealPrediction.Override or Update) (self, ...)
+	return (self.HealPrediction.Override or Update) (self, unpack(arg))
+end
+
+local function GetPath(frame, event)
+    return function(...)
+        local target = arg[1]
+
+        if UnitName(frame.unit) ~= target then
+            return
+        end
+
+        Path(frame, event, frame.unit)
+    end
 end
 
 local ForceUpdate = function(element)
@@ -162,15 +185,15 @@ local function Enable(self)
 		hp.__owner = self
 		hp.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_HEAL_PREDICTION', Path)
+                hp.ace = AceLibrary('AceAddon-2.0'):new('AceEvent-2.0')
+                hp.ace:RegisterEvent('HealComm_Healupdate', GetPath(self, 'HealComm_Healupdate'))
+
 		self:RegisterEvent('UNIT_MAXHEALTH', Path)
 		if(hp.frequentUpdates) then
 			self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
 		else
 			self:RegisterEvent('UNIT_HEALTH', Path)
 		end
-		self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
-		self:RegisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)
 
 		if(not hp.maxOverflow) then
 			hp.maxOverflow = 1.05

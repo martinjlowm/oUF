@@ -143,7 +143,6 @@ local Update = function(self, event, unit)
 end
 
 local Path = function(self, ...)
-    table.insert(arg, arg1)
     return (self.Health.Override or Update) (self, unpack(arg))
 end
 
@@ -181,7 +180,7 @@ local Disable = function(self)
 	local health = self.Health
 	if(health) then
 		health:Hide()
-		self:UnregisterEvent('UNIT_HEALTH_FREQUENT', Path)
+		-- self:UnregisterEvent('UNIT_HEALTH_FREQUENT', Path)
 		self:UnregisterEvent('UNIT_HEALTH', Path)
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
 		self:UnregisterEvent('UNIT_CONNECTION', Path)
